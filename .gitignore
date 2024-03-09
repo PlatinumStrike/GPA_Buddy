@@ -3,3 +3,6 @@ tailwindcss.exe
 
 # Composer Dependencies
 vendor
+
+# Ignore local Environment Files
+**.env
