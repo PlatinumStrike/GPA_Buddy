@@ -1,5 +1,4 @@
-<?php require("config.php") ?>
-
+<?php require 'config.php' ?>
 <!DOCTYPE html>
 <html>
 
@@ -24,6 +23,7 @@
 
         case '/home':
         case '/':
+            require 'inc/home.php';
             include 'tpl/home.tpl.php';
             break;
 

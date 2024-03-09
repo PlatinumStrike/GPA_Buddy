@@ -3,10 +3,10 @@
 <form action="/inc/signup.php" method="post">
 
     <label for="email">Email:</label>
-    <input id="email" name="email" type="email">
+    <input id="email" name="email" type="email" autocomplete="email" value=<?= $email ?>>
 
     <label for="password">Password:</label>
-    <input id="pwd" name="pwd" type="password">
+    <input id="pwd" name="pwd" autocomplete="password" type="password">
 
     <br>
 
