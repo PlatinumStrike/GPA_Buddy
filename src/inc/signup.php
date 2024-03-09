@@ -16,7 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
         header("Location: /signup?MESSAGE=" . $message);
         exit();
     }
-
+    require_once("database.php");
+    $conn = Database::getConnection();
     $sql = "SELECT id FROM users WHERE email = ?";
     $result = $conn->execute_query($sql, [$_POST['email']])->fetch_assoc();
     if (isset($result) && sizeof($result) >= 1) {

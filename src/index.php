@@ -20,6 +20,10 @@
             require 'inc/signup.php';
             include 'tpl/signup.tpl.php';
             break;
+        case '/dashboard':
+            require 'inc/dashboard.php';
+            include 'tpl/dashboard.tpl.php';
+            break;
 
         case '/home':
         case '/':
