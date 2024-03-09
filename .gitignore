@@ -1,2 +1,5 @@
 # Tailwind CLI - platform dependent
 tailwindcss.exe
+
+# Composer Dependencies
+vendor
