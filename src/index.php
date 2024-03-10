@@ -3,12 +3,13 @@
 <html>
 
 <head>
-    <link rel="stylesheet" href="/css/output.css">
+    <link rel="stylesheet" href="/css/output.css" type="text/css">
     <link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura.css" type="text/css">
     <base href="/">
     <?php
     switch (explode("?", $_SERVER['REQUEST_URI'])[0]) {
         case '/dashboard':
+            echo "<link rel='stylesheet' href='/css/collapsible.css' type='text/css'>";
             echo "<script src='/js/collapsible.js'></script>";
             break;
         default:

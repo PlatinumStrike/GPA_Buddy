@@ -16,7 +16,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == "GET") {
-    $transcript_data = json_decode(Database::selectQuery("SELECT transcript from transcripts where id=?", [$_SESSION['user_id']])['transcript']);
+    $transcript_data = json_decode(Database::selectQuery("SELECT transcript from transcripts where id=?", [$_SESSION['user_id']])['transcript'] ?? null);
 } else if ($_SERVER['REQUEST_METHOD'] == "POST") {
     switch ($_POST['form_title']) {
         case "upload_transcript":
