@@ -5,7 +5,7 @@
         <h2 class="mt-6">Upload Transcript</h2>
     </div>
     <div class="collapsible-body">
-        <p>Open <a href="https://mosaic.mcmaster.ca/">MOSAIC</a>, go to Grades, My Academics, View my Course History, then copy and paste the grade table below</p>
+        <p>Open <a target="_blank" rel="noopener noreferrer" href="https://mosaic.mcmaster.ca/">MOSAIC</a>, go to Grades, My Academics, View my Course History, then copy and paste the grade table below</p>
         <form action="/inc/dashboard.php" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="form_title" value="upload_transcript">
             <label for="incomingTranscript">Paste Transcript here</label>
