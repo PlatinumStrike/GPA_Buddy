@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
     $result = Database::selectQuery("SELECT * FROM users WHERE email=?", [$_POST['email']]);
     if (!$result) {
         // CASE: Email Incorrect
-        redirect("/login", ["MESSAGE" => "Incorrect email or passowrd, please try again."]);
+        redirect("/login", ["MESSAGE" => "Incorrect email or password, please try again."]);
         exit();
     } else {
         // Verify password matches saved hash
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
             exit();
         } else {
             // CASE: Password Incorrect
-            redirect("/login", ["MESSAGE" => "Incorrect email or passowrd, please try again."]);
+            redirect("/login", ["MESSAGE" => "Incorrect email or password, please try again."]);
         }
     }
 }
