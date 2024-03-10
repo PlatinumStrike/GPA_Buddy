@@ -1,6 +1,11 @@
 # Direct all queries through index.php
 
 RewriteEngine on
+Options -Indexes
+
+RewriteCond %{HTTP_REFERER} !^http:\/\/(.+\.)?gpabuddy\.local/ [NC]
+RewriteRule .*\.(js|css|png|svg)$ /index.php?path=404 [L]
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ /index.php?path=$1 [NC,L,QSA]
