@@ -10,6 +10,12 @@
 
 <body class="text-center">
     <?php
+
+    // Display messages to UI if applicable
+    if (!empty($_GET['MESSAGE'])) {
+        echo $_GET['MESSAGE'] . "<hr>";
+    }
+
     switch (explode("?", $_SERVER['REQUEST_URI'])[0]) {
         case '/login':
             require 'inc/login.php';

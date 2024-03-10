@@ -3,11 +3,8 @@
 require_once("navigation.php");
 require_once("database.php");
 
-// Display messages to UI
+// Autofill persisted email
 if ($_SERVER['REQUEST_METHOD'] == "GET") {
-    if (!empty($_GET['MESSAGE'])) {
-        echo $_GET['MESSAGE'] . "<hr>";
-    }
     $email = $_GET['email'] ?? "";
 } else if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
