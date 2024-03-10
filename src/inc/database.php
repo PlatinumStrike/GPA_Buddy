@@ -41,3 +41,5 @@ class Database
         return $conn->execute_query($query, $parameters);
     }
 }
+
+// EOF

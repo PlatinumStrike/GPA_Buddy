@@ -15,3 +15,5 @@ if (isset($_SESSION['user_id'])) {
         "<form action='/' method='post'><input type='submit' name='logout' value='Log Out'></input></form>" .
         "</div>";
 }
+
+// EOF
