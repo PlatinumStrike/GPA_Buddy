@@ -4,7 +4,7 @@ if (!isset($_SESSION['user_id'])) {
         "<p>You are not currently logged in.</p>" .
         "<div><a href='/signup'><button>Sign Up</button></a> or " .
         "<a href='/login'><button>Login</button></a></div>";
+    exit();
 }
-exit();
 
 // EOF
