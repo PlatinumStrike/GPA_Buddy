@@ -4,12 +4,12 @@
 
 <br>
 
-<div class="grid grid-flow-row grid-cols-2">
+<div class="grid grid-flow-row grid-cols-2 place-items-center">
 
     <p>Just Login,</p>
     <img src="/imgs/login.png" alt="Image of login page">
 
-    <img src="" alt="Image of upload page">
+    <object data="/imgs/file-upload-line.svg" alt="Image of upload page"></object>
     <p>Upload Your Transcript,</p>
 
 </div>

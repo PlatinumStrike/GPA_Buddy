@@ -576,6 +576,14 @@ video {
   flex-direction: row;
 }
 
+.place-items-center {
+  place-items: center;
+}
+
+.items-center {
+  align-items: center;
+}
+
 .items-baseline {
   align-items: baseline;
 }
@@ -588,11 +596,6 @@ video {
   justify-content: space-between;
 }
 
-.px-2 {
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-}
-
 .px-4 {
   padding-left: 1rem;
   padding-right: 1rem;
@@ -600,6 +603,10 @@ video {
 
 .text-center {
   text-align: center;
+}
+
+.align-middle {
+  vertical-align: middle;
 }
 
 .uppercase {
