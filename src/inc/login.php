@@ -1,5 +1,9 @@
 <?php
 
+require_once("navigation.php");
+require_once("database.php");
+
+// Display messages to UI
 if ($_SERVER['REQUEST_METHOD'] == "GET") {
     if (!empty($_GET['MESSAGE'])) {
         echo $_GET['MESSAGE'] . "<hr>";
@@ -7,35 +11,38 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
     $email = $_GET['email'] ?? "";
 } else if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
+    // Check for valid emails
     if (empty(trim($_POST['email']))) {
-        $message = filter_var(str_replace(" ", "%20", "Please provide an email"), FILTER_SANITIZE_URL);
-        header("Location: /signup?MESSAGE=" . $message);
+        redirect("/login", ["MESSAGE" =>  "Please provide an email"]);
         exit();
     } else if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-        $message = filter_var(str_replace(" ", "%20", "Please provide a vaild email"), FILTER_SANITIZE_URL);
-        header("Location: /signup?MESSAGE=" . $message);
+        redirect("/login", ["MESSAGE" => "Please provide a vaild email"]);
         exit();
     }
 
+    // Check password
     if (empty(trim($_POST['pwd']))) {
-        $message = filter_var(str_replace(" ", "%20", "Please provide a password"), FILTER_SANITIZE_URL);
-        header("Location: /signup?email=" . $_POST['email'] . "&MESSAGE=" . $message);
+        redirect("/signup", ["MESSAGE" => "Please provide a password", "email" => $_POST['email']]);
         exit();
     }
-    require_once("database.php");
-    $conn = Database::getConnection();
-    $sql = "SELECT * FROM users WHERE email=?";
-    $result = $conn->execute_query($sql, [$_POST['email']])->fetch_assoc();
+
+    // Check if user exists
+    $result = Database::selectQuery("SELECT * FROM users WHERE email=?", [$_POST['email']]);
     if (!$result) {
-        $message = filter_var(str_replace(" ", "%20", "Email incorrect, please try again."), FILTER_SANITIZE_URL);
-        header("Location: /signup?email=" . $_POST['email'] . "&MESSAGE=" . $message);
+        // CASE: Email Incorrect
+        redirect("/login", ["MESSAGE" => "Incorrect email or passowrd, please try again."]);
         exit();
     } else {
-        $pass = password_verify($_POST['pwd'], $result['password']);
-
-        $_SESSION['user_id'] = $result['id'];
-        $_SESSION['user_email'] = $_POST['email'];
-        header("Location: /dashboard");
-        exit();
+        // Verify password matches saved hash
+        if (password_verify($_POST['pwd'], $result['password'])) {
+            // Sign in user and send to dashboard
+            $_SESSION['user_id'] = $result['id'];
+            $_SESSION['user_email'] = $_POST['email'];
+            redirect("/dashboard");
+            exit();
+        } else {
+            // CASE: Password Incorrect
+            redirect("/login", ["MESSAGE" => "Incorrect email or passowrd, please try again."]);
+        }
     }
 }

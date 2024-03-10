@@ -1,5 +1,9 @@
 <?php
 
+require_once("navigation.php");
+require_once("database.php");
+
+// Display messages to UI
 if ($_SERVER['REQUEST_METHOD'] == "GET") {
     if (!empty($_GET['MESSAGE'])) {
         echo $_GET['MESSAGE'] . "<hr>";
@@ -7,44 +11,38 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
     $email = $_GET['email'] ?? "";
 } else if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
+    // Check for valid emails
     if (empty(trim($_POST['email']))) {
-        $message = filter_var(str_replace(" ", "%20", "Please provide an email"), FILTER_SANITIZE_URL);
-        header("Location: /signup?MESSAGE=" . $message);
+        redirect("/signup", ["MESSAGE" =>  "Please provide an email"]);
         exit();
     } else if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-        $message = filter_var(str_replace(" ", "%20", "Please provide a vaild email"), FILTER_SANITIZE_URL);
-        header("Location: /signup?MESSAGE=" . $message);
+        redirect("/signup", ["MESSAGE" => "Please provide a vaild email"]);
         exit();
     }
-    require_once("database.php");
-    $conn = Database::getConnection();
-    $sql = "SELECT id FROM users WHERE email = ?";
-    $result = $conn->execute_query($sql, [$_POST['email']])->fetch_assoc();
+
+    // Check for existing user
+    $result = Database::selectQuery("SELECT id FROM users WHERE email = ?", [$_POST['email']]);
     if (isset($result) && sizeof($result) >= 1) {
-        $message = filter_var(str_replace(" ", "%20", "An account already exists under this email, please login"), FILTER_SANITIZE_URL);
-        header("Location: /signup?MESSAGE=" . $message);
+        redirect("/signup", ["MESSAGE" => "An account already exists under this email, please <a href='/login'>login</a>"]);
         exit();
     }
 
+    // Check password
     if (empty(trim($_POST['pwd']))) {
-        $message = filter_var(str_replace(" ", "%20", "Please provide a password"), FILTER_SANITIZE_URL);
-        header("Location: /signup?email=" . $_POST['email'] . "&MESSAGE=" . $message);
+        redirect("/signup", ["MESSAGE" => "Please provide a password", "email" => $_POST['email']]);
         exit();
     }
 
-    $sql = "INSERT INTO users (email, password) VALUES (?, ?)";
-    $result = $conn->execute_query($sql, [$_POST['email'], password_hash($_POST['pwd'], PASSWORD_DEFAULT)]);
+    // Add new user and send to dashboard
+    $result = Database::insertQuery("INSERT INTO users (email, password) VALUES (?, ?)", [$_POST['email'], password_hash($_POST['pwd'], PASSWORD_DEFAULT)]);
     if (!$result) {
-        $message = filter_var(str_replace(" ", "%20", "An error occurred, please try again later."), FILTER_SANITIZE_URL);
-        header("Location: /signup?email=" . $_POST['email'] . "&MESSAGE=" . $message);
+        redirect("/signup", ["MESSAGE" => "An error occurred, please try again later.", "email" => $_POST['email']]);
         exit();
     } else {
-        $sql = "SELECT id FROM users WHERE email = ?";
-        $result = $conn->execute_query($sql, [$_POST['email']])->fetch_assoc();
-
+        $result = Database::selectQuery("SELECT id FROM users WHERE email = ?", [$_POST['email']]);
         $_SESSION['user_id'] = $result['id'];
         $_SESSION['user_email'] = $_POST['email'];
-        header("Location: /home");
+        redirect("/dashboard");
         exit();
     }
 }

@@ -28,4 +28,16 @@ class Database
         }
         return self::$db->conn;
     }
+
+    public static function selectQuery($query, $parameters)
+    {
+        $conn = self::getConnection();
+        return $conn->execute_query($query, $parameters)->fetch_assoc();
+    }
+
+    public static function insertQuery($query, $parameters)
+    {
+        $conn = self::getConnection();
+        return $conn->execute_query($query, $parameters);
+    }
 }
