@@ -6,6 +6,15 @@
     <link rel="stylesheet" href="/css/output.css">
     <link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura.css" type="text/css">
     <base href="/">
+    <?php
+    switch (explode("?", $_SERVER['REQUEST_URI'])[0]) {
+        case '/dashboard':
+            echo "<script src='/js/collapsible.js'></script>";
+            break;
+        default:
+            break;
+    }
+    ?>
 </head>
 
 <body class="text-center">
@@ -37,6 +46,7 @@
             include 'tpl/home.tpl.php';
             break;
 
+        case '404':
         default:
             header('HTTP/1.0 404 Not Found');
             include 'tpl/page_not_found.tpl.php';
