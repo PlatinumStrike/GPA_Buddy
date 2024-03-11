@@ -1,8 +1,11 @@
 <h1>Dashboard</h1>
 
-<div class="my-20 px-8 py-4 border-2 collapsible">
+<?= $transcript_data ? null : "Please upload a transcript" ?>
+<br>
+<div class="my-20 px-8 py-4 rounded-xl border-2 collapsible">
     <div class="collapsible-header">
         <h2 class="mt-6">Upload Transcript</h2>
+        <?= $transcript_upload_date ?>
     </div>
     <div class="collapsible-body">
         <p>Open <a target="_blank" rel="noopener noreferrer" href="https://mosaic.mcmaster.ca/">MOSAIC</a>, go to Grades, My Academics, View my Course History, then copy and paste the grade table below</p>
@@ -16,7 +19,7 @@
     </div>
 </div>
 
-<div class="my-20 px-8 py-4 border-2 collapsible">
+<div class="my-20 px-8 py-4 rounded-xl border-2 collapsible">
     <div class="collapsible-header">
         <h2 class="mt-6">List of Classes</h2>
     </div>
@@ -25,7 +28,7 @@
     </div>
 </div>
 
-<div class="my-20 px-8 py-4 border-2 collapsible">
+<div class="my-20 px-8 py-4 rounded-xl border-2 collapsible">
     <div class="collapsible-header">
         <h2>GPA Trends</h2>
         <div class="my-20 px-8 py-4 border-2">
@@ -44,7 +47,6 @@
     </div>
 </div>
 
-<?= $course_list ?? "Please upload a transcript" ?> <br>
 
 <a href="/">Go Home</a>
 <script>

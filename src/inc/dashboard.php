@@ -49,12 +49,20 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+/**
+ * Sorts incoming transcript data by term
+ * @param mixed $transcript_data Unsorted Array of class list
+ * @return array Array of term-sorted class list
+ */
 function groupByTerm($transcript_data)
 {
+    // Sort by term name
     $grouped = array();
     foreach ($transcript_data as $class) {
         $grouped[$class->term][] = $class;
     }
+
+    // Sort term seasons
     uksort($grouped, function ($a, $b) {
         $months = ["Winter" => 0.25, "Spring/Summer" => .5, "Fall" => 0.75];
         $aYear = intval(substr($a, 0, 4)) + $months[substr($a, 5, strlen($a) - 5)];
@@ -64,13 +72,19 @@ function groupByTerm($transcript_data)
     return $grouped;
 }
 
+/**
+ * Generate an HTML classCard
+ * @param mixed $classData Object containing class grade/status data
+ * @return string HTML Displaying class data
+ */
 function classCard($classData)
 {
     global $gpaNum;
     $unitsEarned = $classData->status == 'Taken' ? $classData->units : "0.00";
     $gradePoints = floatval($unitsEarned) * ($gpaNum[$classData->grade] ?? 0);
     $totalGradePoints = floatval($unitsEarned) * 12;
-    return "<div class='border-2'>" .
+
+    return "<div class='border-2 my-4'>" .
         "<h4>{$classData->course}</h4>" .
         "<h5>{$classData->description}</h5>" .
         "<h2>{$classData->grade}</h2>" .
@@ -80,95 +94,138 @@ function classCard($classData)
 }
 
 if ($_SERVER['REQUEST_METHOD'] == "GET") {
-    $transcript_data = json_decode(Database::selectQuery("SELECT transcript from transcripts where id=?", [$_SESSION['user_id']])['transcript'] ?? null);
-    $transcript_terms = groupByTerm($transcript_data);
+    // Get Transcript Data if uploaded
+    $transcript_data = Database::selectQuery("SELECT transcript, upload_date from transcripts where id=?", [$_SESSION['user_id']]);
 
+    // Create empty variables in case of transcript lookup failure
+    $transcript_upload_date = "";
     $gradepoints_terms = [];
     $gradepoints_totals_terms = [];
     $class_list = "";
+    $cGPA = "N/A";
+    $cGPALetter = "No Transcript";
 
-    foreach ($transcript_terms as $term) {
-        $gradepoints = 0;
-        $gradepoints_totals = 0;
-        $class_list .= "<div class='collapsible'>" .
-            "<div class='collapsible-header'><h6>{$term[0]->term}</h6>" .
-            "</div>" .
-            "<div class='collapsible-body'>";
+    // Process transcript
+    if ($transcript_data) {
+        $transcript_upload_date = "<h6 class='inline px-4 py-2 rounded-xl text-green-700 bg-green-200'>Last uploaded: " . $transcript_data['upload_date'] . "</h6>";
+        $transcript = json_decode($transcript_data['transcript']);
+        // Group and sort transcript by term
+        $transcript_terms = groupByTerm($transcript);
 
-        foreach ($term as $class) {
-            $unitsEarned = $class->status == 'Taken' ? $class->units : "0.00";
-            $gpts = floatval($unitsEarned) * ($gpaNum[$class->grade] ?? 0);
-            $gpts_total = floatval($unitsEarned) * 12;
-            $gradepoints += $gpts;
-            $gradepoints_totals += $gpts_total;
-            $class_list .= classCard($class);
+        foreach ($transcript_terms as $term) {
+            // Start Term GP counters
+            $GP_earned = 0;
+            $GP_possible = 0;
+
+            // Begin UI for term
+            $class_list .= "<div class='collapsible'>" .
+                "<div class='collapsible-header'><h6>{$term[0]->term}</h6>" .
+                "</div>" .
+                "<div class='collapsible-body'>";
+
+            foreach ($term as $class) {
+                // Calculate Class GPs and apply to term information
+                $units_earned = $class->status == 'Taken' ? $class->units : "0.00";
+                $GP_earned += floatval($units_earned) * ($gpaNum[$class->grade] ?? 0);
+                $GP_possible  += floatval($units_earned) * 12;
+
+                // Add UI for class
+                $class_list .= classCard($class);
+            }
+
+            // End UI for term
+            $class_list .= "</div></div>";
+
+            //Update 
+            $GP_earned_terms[$term[0]->term] = $GP_earned;
+            $GP_possible_terms[$term[0]->term] = $GP_possible;
         }
-        $class_list .= "</div></div>";
-        $gradepoints_terms[$term[0]->term] = $gradepoints;
-        $gradepoints_totals_terms[$term[0]->term] = $gradepoints_totals;
+
+        // Extract data for graphs
+        $GP_earned_data = json_encode(array_values($GP_earned_terms));
+        $GP_possible_data = json_encode(array_values($GP_possible_terms));
+        $terms = json_encode(array_keys($GP_earned_terms));
+
+        $percent_earned_data = json_encode(array_map(function ($a, $b) {
+            return $b > 0 ? round($a / $b * 100, 1) . "%" : 0;
+        }, $GP_earned_terms, $GP_possible_terms));
+
+        $letter_earned_data = json_encode(array_map(function ($a, $b) {
+            global $gpaLetter;
+            return ($gpaLetter[$b > 0 ? floor($a / ($b / 12)) : 0]) . ", " . ($b > 0 ? round($a / $b * 12, 2) : 0);
+        }, $GP_earned_terms, $GP_possible_terms));
+
+        // Define graph driver code
+        $script = "var pointsPerTerm = [
+            {
+                x: {$terms},
+                y: {$GP_earned_data},
+                name: 'Points Earned',
+                type: 'bar'
+            },
+            {
+                x: {$terms},
+                y: {$GP_possible_data},
+                name: 'Total Points',
+                type: 'bar'
+            },
+        ];
+        var percentagePointsPerTerm = [
+            {
+                x: {$terms},
+                y: {$percent_earned_data},
+                text: {$letter_earned_data},
+                name: 'Percentage Earned',
+                type: 'bar'
+            }
+        ];
+        Plotly.newPlot(document.getElementById('gpaTrendGraph'), pointsPerTerm, {barmode:'group', title: 'GPA Points per Term'});
+        Plotly.newPlot(document.getElementById('gpaPercentTrendGraph'), percentagePointsPerTerm, {title: 'GPA Percentage per Term'});
+        ";
+
+        // Compute Cummalitive GPAs and associated letter grade
+        $cGPA = array_sum($GP_possible_terms) > 0 ? array_sum($GP_earned_terms) / array_sum($GP_possible_terms) * 12 : 0;
+        $cGPALetter = $gpaLetter[floor($cGPA)];
     }
-
-    $pointsEarned = json_encode(array_values($gradepoints_terms));
-    $percentagePointsEarned = json_encode(array_map(function ($a, $b) {
-        return $b > 0 ? round($a / $b * 100, 1) . "%" : 0;
-    }, $gradepoints_terms, $gradepoints_totals_terms));
-    $letterPointsEarned = json_encode(array_map(function ($a, $b) {
-        global $gpaLetter;
-        return ($gpaLetter[$b > 0 ? floor($a / ($b / 12)) : 0]) . ", " . ($b > 0 ? round($a / $b * 12, 2) : 0);
-    }, $gradepoints_terms, $gradepoints_totals_terms));
-    $totalPoints = json_encode(array_values($gradepoints_totals_terms));
-    $terms = json_encode(array_keys($gradepoints_terms));
-    $script = "var pointsPerTerm = [
-        {
-            x: {$terms},
-            y: {$pointsEarned},
-            name: 'Points Earned',
-            type: 'bar'
-        },
-        {
-            x: {$terms},
-            y: {$totalPoints},
-            name: 'Total Points',
-            type: 'bar'
-        },
-    ];
-    var percentagePointsPerTerm = [
-        {
-            x: {$terms},
-            y: {$percentagePointsEarned},
-            text: {$letterPointsEarned},
-            name: 'Percentage Earned',
-            type: 'bar'
-        }
-    ];
-    Plotly.newPlot(document.getElementById('gpaTrendGraph'), pointsPerTerm, {barmode:'group', title: 'GPA Points per Term'});
-    Plotly.newPlot(document.getElementById('gpaPercentTrendGraph'), percentagePointsPerTerm, {title: 'GPA Percentage per Term'});
-    ";
-
-    $cGPA = array_sum($gradepoints_totals_terms) > 0 ? array_sum($gradepoints_terms) / array_sum($gradepoints_totals_terms) * 12 : 0;
-    $cGPALetter = $gpaLetter[floor($cGPA)];
 } else if ($_SERVER['REQUEST_METHOD'] == "POST") {
+    // Handle form POST requests
     switch ($_POST['form_title']) {
         case "upload_transcript":
+            // Check input table header for input validity
             if (!str_starts_with($_POST['incoming_transcript'], "Course	Description	Term	Grade	Units	Status")) {
                 redirect("/dashboard", ["MESSAGE" => "Please provide a valid transcript"]);
                 die();
             }
+
+            // Parse table on rows
             $table = explode("\r\n", $_POST['incoming_transcript']);
+
+            // Extract header and seperate on tab
             $header = explode("\t", $table[0]);
+
+            // Remove header from data
             array_shift($table);
+
+            // Chunk data into rows
             $data = array_chunk($table, 6);
+
+            // Map data into objects
             $data = array_map(function ($obj) {
+                global $header;
                 return [
-                    "course" => $obj[0],
-                    "description" => $obj[1],
-                    "term" => $obj[2],
-                    "grade" => $obj[3],
-                    "units" => $obj[4],
-                    "status" => $obj[5],
+                    $header[0] => $obj[0],
+                    $header[1] => $obj[1],
+                    $header[2] => $obj[2],
+                    $header[3] => $obj[3],
+                    $header[4] => $obj[4],
+                    $header[5] => $obj[5],
                 ];
             }, $data);
+
+            // Push information to database and overwrite if neccessary
             Database::insertQuery("INSERT INTO transcripts (id, transcript) VALUES (?,?) ON DUPLICATE KEY UPDATE transcript=?", [$_SESSION['user_id'], json_encode($data), json_encode($data)]);
+
+            // Redirect to newly populated dashboard
             redirect("/dashboard");
         default:
             break;
