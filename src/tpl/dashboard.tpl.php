@@ -16,7 +16,15 @@
     </div>
 </div>
 
-<?= $course_list ?? "Please upload a transcript" ?>
-<br>
+<div class="my-20 px-8 py-4 border-2 collapsible">
+    <div class="collapsible-header">
+        <h2 class="mt-6">List of Classes</h2>
+    </div>
+    <div class="collapsible-body">
+        <?= $class_list ?>
+    </div>
+</div>
+
+<?= $course_list ?? "Please upload a transcript" ?> <br>
 
 <a href="/">Go Home</a>
