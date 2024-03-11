@@ -99,6 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 
     // Create empty variables in case of transcript lookup failure
     $transcript_upload_date = "<h6 class='inline px-4 py-2 rounded-xl text-red-700 bg-red-200'>Please upload a transcript</h6>";
+    $class_list_length = "<h6 class='inline px-4 py-2 rounded-xl text-red-700 bg-red-200'>No classes loaded</h6>";
     $gradepoints_terms = [];
     $gradepoints_totals_terms = [];
     $class_list = "";
@@ -109,6 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
     if ($transcript_data) {
         $transcript_upload_date = "<h6 class='inline px-4 py-2 rounded-xl text-green-700 bg-green-200'>Last uploaded: " . $transcript_data['upload_date'] . "</h6>";
         $transcript = json_decode($transcript_data['transcript']);
+        $class_list_length = "<h6 class='inline px-4 py-2 rounded-xl text-green-700 bg-green-200'>" . count($transcript) . " classes loaded</h6>";
         // Group and sort transcript by term
         $transcript_terms = groupByTerm($transcript);
 

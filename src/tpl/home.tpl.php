@@ -12,7 +12,6 @@
 
         <p>Upload Your Transcript,</p>
         <img src="/imgs/transcript.png" alt="Image of dashboard page">
-        <!-- <object data="/imgs/file-upload-line.svg" alt="Image of upload page"></object> -->
 
     </div>
     <p>And that's it!</p>
