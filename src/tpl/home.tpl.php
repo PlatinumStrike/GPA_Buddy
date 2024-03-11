@@ -8,7 +8,7 @@
     <div class="grid grid-flow-row grid-cols-2 place-items-center ">
 
         <p>Just Login,</p>
-        <img src="/imgs/login.png" alt="Image of login page">
+        <a href="/login"><img src="/imgs/login.png" alt="Image of login page"></a>
 
         <p>Upload Your Transcript,</p>
         <img src="/imgs/transcript.png" alt="Image of dashboard page">
