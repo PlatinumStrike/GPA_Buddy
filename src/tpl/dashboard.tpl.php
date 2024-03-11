@@ -36,7 +36,7 @@
             <h2 class="mb-0"><?= $cGPALetter ?></h2>
             <h6 class="mt-0">(<?= $cGPA ?>)</h6>
         </div>
-        <?= $cGPA ? "<object data='/imgs/down-arrow.svg' class='h-36'></object>" : null ?>
+        <?= $cGPA ? "<object data='/imgs/down-arrow.svg' class='h-36 svg_obj'><style>.svg_obj {pointer-events: none;}</style></object>" : null ?>
     </div>
     <div class="collapsible-body">
         <div class="my-20 p-0 border-2">

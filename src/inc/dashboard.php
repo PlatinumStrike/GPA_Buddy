@@ -23,6 +23,7 @@ $gpaNum = [
     "F" => 0,
     "COM" => 0,
     "MT" => 0,
+    "W" => 0,
 ];
 
 $gpaLetter = [
@@ -80,16 +81,16 @@ function groupByTerm($transcript_data)
 function classCard($classData)
 {
     global $gpaNum;
-    $unitsEarned = $classData->Status == 'Taken' ? $classData->Units : "0.00";
+    $unitsEarned = strcmp($classData->Status, 'Taken') == 0 && strcmp($classData->Grade, "W") !== 0 ? $classData->Units : "0.00";
     $gradePoints = floatval($unitsEarned) * ($gpaNum[$classData->Grade] ?? 0);
-    $totalGradePoints = floatval($unitsEarned) * 12;
+    $gradePointsPossible = floatval($unitsEarned) * 12;
 
     return "<div class='border-2 my-4'>" .
         "<h4>{$classData->Course}</h4>" .
         "<h5>{$classData->Description}</h5>" .
         "<h2>{$classData->Grade}</h2>" .
-        "<h5><b>{$gradePoints}</b>/{$totalGradePoints}</h5>" .
-        "<h6>{$unitsEarned}/{$classData->Units} Units</h6>" .
+        "<h5><b>{$gradePoints}</b>/{$gradePointsPossible}</h5>" .
+        "<h6>{$unitsEarned}/{$unitsEarned} Units</h6>" .
         "</div>";
 }
 
@@ -127,8 +128,9 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 
             foreach ($term as $class) {
                 // Calculate Class GPs and apply to term information
-                $units_earned = $class->Status == 'Taken' ? $class->Units : "0.00";
+                $units_earned = strcmp($class->Status, 'Taken') == 0 && strcmp($class->Grade, "W") !== 0 ? $class->Units : "0.00";
                 $GP_earned += floatval($units_earned) * ($gpaNum[$class->Grade] ?? 0);
+                $class->Grade == "W" ? 0 : $units_earned;
                 $GP_possible  += floatval($units_earned) * 12;
 
                 // Add UI for class
