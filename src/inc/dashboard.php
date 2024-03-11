@@ -106,6 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
     $class_list = "";
     $cGPA = "N/A";
     $cGPALetter = "No Transcript";
+    $script = "";
 
     // Process transcript
     if ($transcript_data) {
