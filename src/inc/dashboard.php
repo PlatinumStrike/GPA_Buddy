@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
     $transcript_data = Database::selectQuery("SELECT transcript, upload_date from transcripts where id=?", [$_SESSION['user_id']]);
 
     // Create empty variables in case of transcript lookup failure
-    $transcript_upload_date = "";
+    $transcript_upload_date = "<h6 class='inline px-4 py-2 rounded-xl text-red-700 bg-red-200'>Please upload a transcript</h6>";
     $gradepoints_terms = [];
     $gradepoints_totals_terms = [];
     $class_list = "";

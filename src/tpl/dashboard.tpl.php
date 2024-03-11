@@ -1,6 +1,5 @@
 <h1>Dashboard</h1>
 
-<?= $transcript_data ? null : "Please upload a transcript" ?>
 <br>
 <div class="my-20 px-8 py-4 rounded-xl border-2 collapsible">
     <div class="collapsible-header">
