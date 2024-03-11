@@ -81,7 +81,7 @@ function groupByTerm($transcript_data)
 function classCard($classData)
 {
     global $gpaNum;
-    $unitsEarned = str_starts_with($classData->Status, 'Taken') !== 0 && strcmp($classData->Grade, "W") !== 0 ? $classData->Units : "0.00";
+    $unitsEarned = str_starts_with($classData->Status, 'Taken') != false && strcmp($classData->Grade, "W") !== 0 ? $classData->Units : "0.00";
     $gradePoints = floatval($unitsEarned) * ($gpaNum[$classData->Grade] ?? 0);
     $gradePointsPossible = floatval($unitsEarned) * 12;
 
@@ -129,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 
             foreach ($term as $class) {
                 // Calculate Class GPs and apply to term information
-                $units_earned = str_starts_with($class->Status, 'Taken') !== 0 && strcmp($class->Grade, "W") !== 0 ? $class->Units : "0.00";
+                $units_earned = str_starts_with($class->Status, 'Taken') != false && strcmp($class->Grade, "W") !== 0 ? $class->Units : "0.00";
                 $GP_earned += floatval($units_earned) * ($gpaNum[$class->Grade] ?? 0);
                 $class->Grade == "W" ? 0 : $units_earned;
                 $GP_possible  += floatval($units_earned) * 12;
