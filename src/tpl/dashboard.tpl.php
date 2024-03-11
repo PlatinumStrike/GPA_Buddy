@@ -25,6 +25,28 @@
     </div>
 </div>
 
+<div class="my-20 px-8 py-4 border-2 collapsible">
+    <div class="collapsible-header">
+        <h2>GPA Trends</h2>
+        <div class="my-20 px-8 py-4 border-2">
+            <h3>Cummulative GPA</h3>
+            <h2 class="mb-0"><?= $cGPALetter ?></h2>
+            <h6 class="mt-0">(<?= $cGPA ?>)</h6>
+        </div>
+    </div>
+    <div class="collapsible-body">
+        <div class="my-20 p-0 border-2">
+            <div id="gpaTrendGraph"></div>
+        </div>
+        <div class="my-20 p-0 border-2">
+            <div id="gpaPercentTrendGraph"></div>
+        </div>
+    </div>
+</div>
+
 <?= $course_list ?? "Please upload a transcript" ?> <br>
 
 <a href="/">Go Home</a>
+<script>
+    <?= $script ?>
+</script>
