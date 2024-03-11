@@ -81,7 +81,7 @@ function groupByTerm($transcript_data)
 function classCard($classData)
 {
     global $gpaNum;
-    $unitsEarned = strcmp($classData->Status, 'Taken') == 0 && strcmp($classData->Grade, "W") !== 0 ? $classData->Units : "0.00";
+    $unitsEarned = str_starts_with($classData->Status, 'Taken') !== 0 && strcmp($classData->Grade, "W") !== 0 ? $classData->Units : "0.00";
     $gradePoints = floatval($unitsEarned) * ($gpaNum[$classData->Grade] ?? 0);
     $gradePointsPossible = floatval($unitsEarned) * 12;
 
@@ -129,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 
             foreach ($term as $class) {
                 // Calculate Class GPs and apply to term information
-                $units_earned = strcmp($class->Status, 'Taken') == 0 && strcmp($class->Grade, "W") !== 0 ? $class->Units : "0.00";
+                $units_earned = str_starts_with($class->Status, 'Taken') !== 0 && strcmp($class->Grade, "W") !== 0 ? $class->Units : "0.00";
                 $GP_earned += floatval($units_earned) * ($gpaNum[$class->Grade] ?? 0);
                 $class->Grade == "W" ? 0 : $units_earned;
                 $GP_possible  += floatval($units_earned) * 12;
@@ -189,7 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
         ";
 
         // Compute Cummalitive GPAs and associated letter grade
-        $cGPA = array_sum($GP_possible_terms) > 0 ? array_sum($GP_earned_terms) / array_sum($GP_possible_terms) * 12 : 0;
+        $cGPA = round(array_sum($GP_possible_terms) > 0 ? array_sum($GP_earned_terms) / array_sum($GP_possible_terms) * 12 : 0, 2);
         $cGPALetter = $gpaLetter[floor($cGPA)];
     }
 } else if ($_SERVER['REQUEST_METHOD'] == "POST") {
@@ -212,7 +212,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
             array_shift($table);
 
             // Chunk data into rows
-            $data = array_chunk($table, 6);
+            $data = array_chunk($table, count($header));
 
             // Map data into objects
             $data = array_map(function ($obj) {
