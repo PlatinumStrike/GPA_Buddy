@@ -59,7 +59,7 @@ function groupByTerm($transcript_data)
     // Sort by term name
     $grouped = array();
     foreach ($transcript_data as $class) {
-        $grouped[$class->term][] = $class;
+        $grouped[$class->Term][] = $class;
     }
 
     // Sort term seasons
@@ -80,16 +80,16 @@ function groupByTerm($transcript_data)
 function classCard($classData)
 {
     global $gpaNum;
-    $unitsEarned = $classData->status == 'Taken' ? $classData->units : "0.00";
-    $gradePoints = floatval($unitsEarned) * ($gpaNum[$classData->grade] ?? 0);
+    $unitsEarned = $classData->Status == 'Taken' ? $classData->Units : "0.00";
+    $gradePoints = floatval($unitsEarned) * ($gpaNum[$classData->Grade] ?? 0);
     $totalGradePoints = floatval($unitsEarned) * 12;
 
     return "<div class='border-2 my-4'>" .
-        "<h4>{$classData->course}</h4>" .
-        "<h5>{$classData->description}</h5>" .
-        "<h2>{$classData->grade}</h2>" .
+        "<h4>{$classData->Course}</h4>" .
+        "<h5>{$classData->Description}</h5>" .
+        "<h2>{$classData->Grade}</h2>" .
         "<h5><b>{$gradePoints}</b>/{$totalGradePoints}</h5>" .
-        "<h6>{$unitsEarned}/{$classData->units} Units</h6>" .
+        "<h6>{$unitsEarned}/{$classData->Units} Units</h6>" .
         "</div>";
 }
 
@@ -119,14 +119,14 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 
             // Begin UI for term
             $class_list .= "<div class='collapsible'>" .
-                "<div class='collapsible-header'><h6>{$term[0]->term}</h6>" .
+                "<div class='collapsible-header'><h6>{$term[0]->Term}</h6>" .
                 "</div>" .
                 "<div class='collapsible-body'>";
 
             foreach ($term as $class) {
                 // Calculate Class GPs and apply to term information
-                $units_earned = $class->status == 'Taken' ? $class->units : "0.00";
-                $GP_earned += floatval($units_earned) * ($gpaNum[$class->grade] ?? 0);
+                $units_earned = $class->Status == 'Taken' ? $class->Units : "0.00";
+                $GP_earned += floatval($units_earned) * ($gpaNum[$class->Grade] ?? 0);
                 $GP_possible  += floatval($units_earned) * 12;
 
                 // Add UI for class
@@ -137,8 +137,8 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
             $class_list .= "</div></div>";
 
             //Update 
-            $GP_earned_terms[$term[0]->term] = $GP_earned;
-            $GP_possible_terms[$term[0]->term] = $GP_possible;
+            $GP_earned_terms[$term[0]->Term] = $GP_earned;
+            $GP_possible_terms[$term[0]->Term] = $GP_possible;
         }
 
         // Extract data for graphs
