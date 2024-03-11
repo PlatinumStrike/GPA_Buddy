@@ -7,16 +7,25 @@ Be warned though, It also has a potency for creating **academic weapons**
 
 Just login, upload your transcript, and get analytics and patterned data right away!
 
+# Screenshots
+
 ![Website Homepage](images/homepage.png)
+![Signup Page](images/signup.png)
+![Dashboard Page](images/dashboard.png)
+
+# Technical Details
+
+This project is a GPA Calculator and Web Scraper designed to get data from McMaster's Mosaic system and generate GPA and grade statistics.
 
 ## Technologies
 
-1. [PHP](https://www.php.net/)
-2. [MySQL](https://www.mysql.com/)
-3. [Plotly](https://plotly.com/javascript/)
+1. [PHP](https://www.php.net/) 8.2.12
+2. [MySQL](https://www.mysql.com/) 10.4.32-MariaDB
+3. [Plotly](https://plotly.com/javascript/) 2.29.1
 4. [Flowbite](https://flowbite.com/icons/)
+5. [Symfony](https://symfony.com/) 7.0
 
-### Database Structure
+## Database Structure
 
 The following is required to host GPA Buddy:
 
