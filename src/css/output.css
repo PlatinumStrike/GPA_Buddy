@@ -544,12 +544,66 @@ video {
   --tw-backdrop-sepia:  ;
 }
 
+.container {
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .container {
+    max-width: 640px;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 768px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1024px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1280px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .container {
+    max-width: 1536px;
+  }
+}
+
 .visible {
   visibility: visible;
 }
 
+.invisible {
+  visibility: hidden;
+}
+
 .static {
   position: static;
+}
+
+.fixed {
+  position: fixed;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.relative {
+  position: relative;
+}
+
+.isolate {
+  isolation: isolate;
 }
 
 .my-20 {
@@ -578,6 +632,10 @@ video {
   margin-top: 1.5rem;
 }
 
+.block {
+  display: block;
+}
+
 .inline {
   display: inline;
 }
@@ -604,6 +662,14 @@ video {
 
 .h-36 {
   height: 9rem;
+}
+
+.shrink {
+  flex-shrink: 1;
+}
+
+.transform {
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
 .grid-flow-row {
@@ -644,6 +710,10 @@ video {
 
 .rounded-xl {
   border-radius: 0.75rem;
+}
+
+.border {
+  border-width: 1px;
 }
 
 .border-2 {
@@ -705,6 +775,11 @@ video {
   text-align: center;
 }
 
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
 .uppercase {
   text-transform: uppercase;
 }
@@ -721,6 +796,12 @@ video {
 .text-red-700 {
   --tw-text-opacity: 1;
   color: rgb(185 28 28 / var(--tw-text-opacity));
+}
+
+.ring {
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
 }
 
 .filter {

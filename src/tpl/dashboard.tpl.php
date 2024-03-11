@@ -7,11 +7,14 @@
         <?= $transcript_upload_date ?>
     </div>
     <div class="collapsible-body">
-        <p>Open <a target="_blank" rel="noopener noreferrer" href="https://csprd.mcmaster.ca/psc/prcsprd/EMPLOYEE/SA/c/SA_LEARNER_SERVICES.SSS_MY_CRSEHIST.GBL?Page=SSS_MY_CRSEHIST&Action=U&ForceSearch=Y">MOSAIC</a>, go to Grades, My Academics, View my Course History, then copy and paste the grade table below</p>
+        <p class="mb-0">Please fill our your MacID and Password to upload your transcript</p>
+        <em class="text-xl">NOTE: These credentials are not stored and are requried on every upload</em>
         <form action="/inc/dashboard.php" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="form_title" value="upload_transcript">
-            <label for="incomingTranscript">Paste Transcript here</label>
-            <textarea name="incoming_transcript" id="incomingTranscript"></textarea>
+            <label for="userid">MacID</label>
+            <input type="text" id="userid" name="userid" title="User ID">
+            <label for="userid">Password</label>
+            <input type="password" id="pwd" name="pwd" autocomplete="current-password">
             <br>
             <input type="submit" value="Upload Transcript">
         </form>

@@ -100,6 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 
     // Create empty variables in case of transcript lookup failure
     $transcript_upload_date = "<h6 class='inline px-4 py-2 rounded-xl text-red-700 bg-red-200'>Please upload a transcript</h6>";
+    $transcript_uploaded = false;
     $class_list_length = "<h6 class='inline px-4 py-2 rounded-xl text-red-700 bg-red-200'>No classes loaded</h6>";
     $gradepoints_terms = [];
     $gradepoints_totals_terms = [];
@@ -111,7 +112,8 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
     // Process transcript
     if ($transcript_data) {
         $transcript_upload_date = "<h6 class='inline px-4 py-2 rounded-xl text-green-700 bg-green-200'>Last uploaded: " . $transcript_data['upload_date'] . "</h6>";
-        $transcript = json_decode($transcript_data['transcript']);
+        $transcript_uploaded = true;
+        $transcript = (array) json_decode($transcript_data['transcript']);
         $class_list_length = "<h6 class='inline px-4 py-2 rounded-xl text-green-700 bg-green-200'>" . count($transcript) . " classes loaded</h6>";
         // Group and sort transcript by term
         $transcript_terms = groupByTerm($transcript);
@@ -196,36 +198,27 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
     // Handle form POST requests
     switch ($_POST['form_title']) {
         case "upload_transcript":
-            // Check input table header for input validity
-            if (!str_starts_with($_POST['incoming_transcript'], "Course	Description	Term	Grade	Units	Status")) {
-                redirect("/dashboard", ["MESSAGE" => "Please provide a valid transcript"]);
-                die();
+            require_once("webscraper.php");
+
+            if (!isset($_POST['userid'])) {
+                redirect("/dashboard", ["MESSAGE" => "Please provide a UserID"]);
+                exit();
+            }
+            if (!isset($_POST['pwd'])) {
+                redirect("/dashboard", ["MESSAGE" => "Please provide a Password"]);
+                exit();
             }
 
-            // Parse table on rows
-            $table = explode("\r\n", $_POST['incoming_transcript']);
+            $webscraper = new Webscraper();
+            $webscraper->getRequest("https://csprd.mcmaster.ca/psc/prcsprd/EMPLOYEE/SA/c/SA_LEARNER_SERVICES.SSS_MY_CRSEHIST.GBL");
+            $login = $webscraper->submitLoginForm($_POST['userid'], $_POST['pwd'], "https://csprd.mcmaster.ca/psc/prcsprd/EMPLOYEE/SA/c/SA_LEARNER_SERVICES.SSS_MY_CRSEHIST.GBL?");
+            if (!$login) {
+                redirect("/dashboard", ["MESSAGE" => "Credentials Incorrect"]);
+                exit();
+            }
 
-            // Extract header and seperate on tab
-            $header = explode("\t", $table[0]);
-
-            // Remove header from data
-            array_shift($table);
-
-            // Chunk data into rows
-            $data = array_chunk($table, count($header));
-
-            // Map data into objects
-            $data = array_map(function ($obj) {
-                global $header;
-                return [
-                    $header[0] => $obj[0],
-                    $header[1] => $obj[1],
-                    $header[2] => $obj[2],
-                    $header[3] => $obj[3],
-                    $header[4] => $obj[4],
-                    $header[5] => $obj[5],
-                ];
-            }, $data);
+            $tableParser = new TableParser($webscraper->getHTMLResponse());
+            $data = $tableParser->getTranscriptData();
 
             // Push information to database and overwrite if neccessary
             Database::insertQuery("INSERT INTO transcripts (id, transcript) VALUES (?,?) ON DUPLICATE KEY UPDATE transcript=?", [$_SESSION['user_id'], json_encode($data), json_encode($data)]);
