@@ -22,6 +22,7 @@ $gpaNum = [
     "D-" => 1,
     "F" => 0,
     "COM" => 0,
+    "LWD" => 0,
     "MT" => 0,
     "W" => 0,
 ];
@@ -131,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 
             foreach ($term as $class) {
                 // Calculate Class GPs and apply to term information
-                $units_earned = str_starts_with($class->Status, 'Taken') != false && strcmp($class->Grade, "W") !== 0 ? $class->Units : "0.00";
+                $units_earned = str_starts_with($class->Status, 'Taken') != false && ($gpaNum[$class->Grade] ?? 0) != 0 ? $class->Units : "0.00";
                 $GP_earned += floatval($units_earned) * ($gpaNum[$class->Grade] ?? 0);
                 $class->Grade == "W" ? 0 : $units_earned;
                 $GP_possible  += floatval($units_earned) * 12;
