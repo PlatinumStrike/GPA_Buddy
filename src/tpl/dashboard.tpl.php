@@ -48,6 +48,9 @@
         <div class="my-20 p-0 border-2">
             <div id="gpaPercentTrendGraph"></div>
         </div>
+        <div class="my-20 p-0 border-2">
+            <div id="unitTrendGraph"></div>
+        </div>
     </div>
 </div>
 

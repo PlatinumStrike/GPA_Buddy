@@ -123,6 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
             // Start Term GP counters
             $GP_earned = 0;
             $GP_possible = 0;
+            $Units_possible = 0;
 
             // Begin UI for term
             $class_list .= "<div class='collapsible'>" .
@@ -134,8 +135,9 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 // Calculate Class GPs and apply to term information
                 $units_earned = str_starts_with($class->Status, 'Taken') != false && ($gpaNum[$class->Grade] ?? 0) != 0 ? $class->Units : "0.00";
                 $GP_earned += floatval($units_earned) * ($gpaNum[$class->Grade] ?? 0);
-                $class->Grade == "W" ? 0 : $units_earned;
+                // $class->Grade == "W" ? 0 : $units_earned;
                 $GP_possible  += floatval($units_earned) * 12;
+                $Units_possible += floatval($class->Units);
 
                 // Add UI for class
                 $class_list .= classCard($class);
@@ -147,11 +149,13 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
             //Update 
             $GP_earned_terms[$term[0]->Term] = $GP_earned;
             $GP_possible_terms[$term[0]->Term] = $GP_possible;
+            $Units_possible_terms[$term[0]->Term] = $Units_possible;
         }
 
         // Extract data for graphs
         $GP_earned_data = json_encode(array_values($GP_earned_terms));
         $GP_possible_data = json_encode(array_values($GP_possible_terms));
+        $GP_possible_units = json_encode(array_values($Units_possible_terms));
         $terms = json_encode(array_keys($GP_earned_terms));
 
         $percent_earned_data = json_encode(array_map(function ($a, $b) {
@@ -187,8 +191,17 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 type: 'bar'
             }
         ];
+        var unitLoadPerTerm = [
+            {
+                x: {$terms},
+                y: {$GP_possible_units},
+                name: 'Unit Load',
+                type: 'bar'
+            }
+        ];
         Plotly.newPlot(document.getElementById('gpaTrendGraph'), pointsPerTerm, {barmode:'group', title: 'GPA Points per Term'});
         Plotly.newPlot(document.getElementById('gpaPercentTrendGraph'), percentagePointsPerTerm, {title: 'GPA Percentage per Term'});
+        Plotly.newPlot(document.getElementById('unitTrendGraph'), unitLoadPerTerm, {title: 'Unit Load per Term'});
         ";
 
         // Compute Cummalitive GPAs and associated letter grade
