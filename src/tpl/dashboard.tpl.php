@@ -2,9 +2,10 @@
 
 <br>
 <div class="my-20 px-8 py-4 rounded-xl border-2 collapsible">
-    <div class="collapsible-header">
+    <div class="collapsible-header justify-center justify-items-center grid">
         <h2 class="mt-6">Upload Transcript</h2>
         <?= $transcript_upload_date ?>
+        <?= $cGPA ? "<object data='/imgs/down-arrow.svg' class='h-36 svg_obj'><style>.svg_obj {pointer-events: none;}</style></object>" : null ?>
     </div>
     <div class="collapsible-body">
         <p class="mb-0">Please fill our your MacID and Password to upload your transcript</p>
@@ -12,7 +13,7 @@
         <form action="/inc/dashboard.php" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="form_title" value="upload_transcript">
             <label for="userid">MacID</label>
-            <input type="text" id="userid" name="userid" title="User ID">
+            <input type="text" id="userid" autocomplete="userid" name="userid" title="User ID">
             <label for="userid">Password</label>
             <input type="password" id="pwd" name="pwd" autocomplete="current-password">
             <br>
@@ -25,6 +26,7 @@
     <div class="collapsible-header flex flex-col">
         <h2 class="mt-6">List of Classes</h2>
         <?= $class_list_length ?>
+        <?= $cGPA ? "<object data='/imgs/down-arrow.svg' class='h-36 svg_obj'><style>.svg_obj {pointer-events: none;}</style></object>" : null ?>
     </div>
     <div class="collapsible-body">
         <?= $class_list ?>
