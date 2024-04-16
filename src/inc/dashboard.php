@@ -82,7 +82,7 @@ function groupByTerm($transcript_data)
 function classCard($classData)
 {
     global $gpaNum;
-    $unitsEarned = str_starts_with($classData->Status, 'Taken') != false && $gpaNum[$classData->Grade] ?? 0 !== 0 ? $classData->Units : "0.00";
+    $unitsEarned = (str_starts_with($classData->Status, 'Taken') != false && ($gpaNum[$classData->Grade] ?? 0) !== 0) ? $classData->Units : "0.00";
     $gradePoints = floatval($unitsEarned) * ($gpaNum[$classData->Grade] ?? 0);
     $gradePointsPossible = floatval($unitsEarned) * 12;
 
