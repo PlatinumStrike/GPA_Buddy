@@ -23,8 +23,14 @@ $gpaNum = [
     "F" => 0,
     "COM" => 0,
     "LWD" => 0,
+    "P" => 0,
+    "F" => 0,
     "MT" => 0,
     "W" => 0,
+];
+
+$creditNoGPA = [
+    "P"
 ];
 
 $gpaLetter = [
@@ -81,10 +87,14 @@ function groupByTerm($transcript_data)
  */
 function classCard($classData)
 {
-    global $gpaNum;
+    global $gpaNum, $creditNoGPA;
     $unitsEarned = (str_starts_with($classData->Status, 'Taken') != false && ($gpaNum[$classData->Grade] ?? 0) !== 0) ? $classData->Units : "0.00";
-    $gradePoints = floatval($unitsEarned) * ($gpaNum[$classData->Grade] ?? 0);
     $gradePointsPossible = floatval($unitsEarned) * 12;
+    $gradePoints = floatval($unitsEarned) * ($gpaNum[$classData->Grade] ?? 0);
+    if (in_array($classData->Grade, $creditNoGPA)) {
+        $unitsEarned = str_starts_with($classData->Status, 'Taken') ? $classData->Units : "0.00";
+        $gradePointsPossible = 0;
+    }
 
     return "<div class='border-2 my-4'>" .
         "<h4>{$classData->Course}</h4>" .
@@ -136,7 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 $units_earned = str_starts_with($class->Status, 'Taken') != false && ($gpaNum[$class->Grade] ?? 0) != 0 ? $class->Units : "0.00";
                 $GP_earned += floatval($units_earned) * ($gpaNum[$class->Grade] ?? 0);
                 // $class->Grade == "W" ? 0 : $units_earned;
-                $GP_possible  += floatval($units_earned) * 12;
+                $GP_possible  += in_array($class->Grade, $creditNoGPA) ? 0 : floatval($units_earned) * 12;
                 $Units_possible += floatval($class->Units);
 
                 // Add UI for class
