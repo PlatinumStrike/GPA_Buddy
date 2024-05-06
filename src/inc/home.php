@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 $getStarted = "<div class='pb-8 pt-4 rounded-xl bg-gray-200'><h2 class='mt-2'>Get Started Today!</h2>" .
     "<div><a href='/signup'><button>Sign Up</button></a> " .
     "<a href='/login'><button>Login</button></a></div></div>";

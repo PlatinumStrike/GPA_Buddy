@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 require_once("navigation.php");
 require_once("database.php");
 

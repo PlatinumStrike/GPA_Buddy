@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 // TODO: Add "Keep me signed in" feature
 
 require_once("navigation.php");
