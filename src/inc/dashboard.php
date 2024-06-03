@@ -24,7 +24,6 @@ $gpaNum = [
     "COM" => 0,
     "LWD" => 0,
     "P" => 0,
-    "F" => 0,
     "MT" => 0,
     "W" => 0,
 ];
@@ -235,6 +234,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 
             $webscraper = new Webscraper();
             $webscraper->getRequest("https://csprd.mcmaster.ca/psc/prcsprd/EMPLOYEE/SA/c/SA_LEARNER_SERVICES.SSS_MY_CRSEHIST.GBL");
+            // $webscraper->getRequest("https://mosaic.mcmaster.ca/");
             $login = $webscraper->submitLoginForm($_POST['userid'], $_POST['pwd'], "https://csprd.mcmaster.ca/psc/prcsprd/EMPLOYEE/SA/c/SA_LEARNER_SERVICES.SSS_MY_CRSEHIST.GBL?");
             if (!$login) {
                 redirect("/dashboard", ["MESSAGE" => "Credentials Incorrect"]);
