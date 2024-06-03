@@ -245,7 +245,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
             $data = $tableParser->getTranscriptData();
 
             // Push information to database and overwrite if neccessary
-            Database::insertQuery("INSERT INTO transcripts (id, transcript) VALUES (?,?) ON DUPLICATE KEY UPDATE transcript=?", [$_SESSION['user_id'], json_encode($data), json_encode($data)]);
+            Database::insertQuery("INSERT INTO transcripts (id, transcript, upload_date) VALUES (?,?,NOW()) ON DUPLICATE KEY UPDATE transcript=?, upload_date=NOW()", [$_SESSION['user_id'], json_encode($data), json_encode($data)]);
 
             // Redirect to newly populated dashboard
             redirect("/dashboard");
