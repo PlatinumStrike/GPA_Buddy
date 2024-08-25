@@ -6,3 +6,6 @@ vendor
 
 # Ignore local Environment Files
 **.env
+
+# Ignore Apache PHPMYADMIN tool
+phpmyadmin
