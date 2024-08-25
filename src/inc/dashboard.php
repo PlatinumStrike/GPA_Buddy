@@ -95,7 +95,7 @@ function classCard($classData)
         $gradePointsPossible = 0;
     }
 
-    return "<div class='border-2 my-4'>" .
+    return "<div class='border-2 p-4'>" .
         "<h4>{$classData->Course}</h4>" .
         "<h5>{$classData->Description}</h5>" .
         "<h2>{$classData->Grade}</h2>" .
@@ -135,17 +135,17 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
             $Units_possible = 0;
 
             // Begin UI for term
-            $class_list .= "<div class='collapsible'>" .
-                "<div class='collapsible-header'><h6>{$term[0]->Term}</h6>" .
+            $class_list .= "<div class='collapsible rounded-lg my-4 py-5 px-20'>" .
+                "<div class='collapsible-header'><h3>{$term[0]->Term}</h3>" .
                 "</div>" .
-                "<div class='collapsible-body'>";
+                "<div class='collapsible-body grid gap-4 grid-cols-2 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4'>";
 
             foreach ($term as $class) {
                 // Calculate Class GPs and apply to term information
                 $units_earned = str_starts_with($class->Status, 'Taken') != false && ($gpaNum[$class->Grade] ?? 0) != 0 ? $class->Units : "0.00";
                 $GP_earned += floatval($units_earned) * ($gpaNum[$class->Grade] ?? 0);
                 // $class->Grade == "W" ? 0 : $units_earned;
-                $GP_possible  += in_array($class->Grade, $creditNoGPA) ? 0 : floatval($units_earned) * 12;
+                $GP_possible += in_array($class->Grade, $creditNoGPA) ? 0 : floatval($units_earned) * 12;
                 $Units_possible += floatval($class->Units);
 
                 // Add UI for class

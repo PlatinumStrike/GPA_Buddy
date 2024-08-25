@@ -14,7 +14,12 @@ document.addEventListener("DOMContentLoaded", function (e) {
             var collapsibleElement = this.parentNode;
 
             // Toggle active flag on container
-            this.classList.toggle("active");
+            collapsibleElement.classList.toggle("active");
+            try {
+                this.querySelector(":scope > .a_bounce").classList.toggle("animate-bounce");
+            } catch {
+
+            }
 
             // Select body
             var body = collapsibleElement.querySelector(":scope > .collapsible-body");
