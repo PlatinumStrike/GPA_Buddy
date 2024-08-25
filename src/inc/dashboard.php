@@ -4,6 +4,7 @@ require_once(dirname(__DIR__, 1) . "/config.php");
 require_once("database.php");
 
 require("navigation.php");
+require_once("webscraper.php");
 
 $transcript_data = "";
 
@@ -48,12 +49,42 @@ $gpaLetter = [
     0 => "F",
 ];
 
+// SIGNED-OUT CASE
+
 if (!isset($_SESSION['user_id'])) {
     echo "<h1>Dashboard</h1>" .
         "<p>You are not currently logged in.</p>" .
         "<div><a href='/signup'><button>Sign Up</button></a> or " .
         "<a href='/login'><button>Login</button></a></div>";
     exit();
+}
+
+// AUTOLOAD TRANSCRIPT DATA IF CREDENTIALS ARE SAVED
+
+$macCreds = Database::selectQuery("SELECT macid, macpwd from users where id=?", [$_SESSION['user_id']]);
+ob_start();
+include("./tpl/dashboard.credentials.tpl.php");
+$mac_cred_form = ob_get_clean();
+
+if ($macCreds["macid"] == "") {
+    $transcript_form = $mac_cred_form;
+} else {
+    $webscraper = new Webscraper();
+    $webscraper->getRequest("https://csprd.mcmaster.ca/psc/prcsprd/EMPLOYEE/SA/c/SA_LEARNER_SERVICES.SSS_MY_CRSEHIST.GBL");
+    $login = $webscraper->submitLoginForm($macCreds["macid"], $macCreds["macpwd"], "https://csprd.mcmaster.ca/psc/prcsprd/EMPLOYEE/SA/c/SA_LEARNER_SERVICES.SSS_MY_CRSEHIST.GBL?");
+    if (!$login) {
+        redirect("/dashboard", ["MESSAGE" => "Credentials Incorrect"]);
+        exit();
+    }
+
+    $tableParser = new TableParser($webscraper->getHTMLResponse());
+    $data = $tableParser->getTranscriptData();
+
+    // Push information to database and overwrite if neccessary
+    Database::insertQuery("INSERT INTO transcripts (id, transcript, upload_date) VALUES (?,?,NOW()) ON DUPLICATE KEY UPDATE transcript=?, upload_date=NOW()", [$_SESSION['user_id'], json_encode($data), json_encode($data)]);
+
+    $transcript_form .= "<div class='collapsible m-10'><div class='collapsible-header m-10 p-4'>Your McMaster Credentials are saved. If you would like to update them, press <b>here</b></div>";
+    $transcript_form .= "<div class='collapsible-body'>" . $mac_cred_form . "</div></div>";
 }
 
 /**
@@ -221,8 +252,6 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
     // Handle form POST requests
     switch ($_POST['form_title']) {
         case "upload_transcript":
-            require_once("webscraper.php");
-
             if (!isset($_POST['userid'])) {
                 redirect("/dashboard", ["MESSAGE" => "Please provide a UserID"]);
                 exit();
@@ -231,6 +260,8 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 redirect("/dashboard", ["MESSAGE" => "Please provide a Password"]);
                 exit();
             }
+
+            $_POST['userid'] = str_replace("@mcmaster.ca", "", $_POST['userid']);
 
             $webscraper = new Webscraper();
             $webscraper->getRequest("https://csprd.mcmaster.ca/psc/prcsprd/EMPLOYEE/SA/c/SA_LEARNER_SERVICES.SSS_MY_CRSEHIST.GBL");
@@ -246,6 +277,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 
             // Push information to database and overwrite if neccessary
             Database::insertQuery("INSERT INTO transcripts (id, transcript, upload_date) VALUES (?,?,NOW()) ON DUPLICATE KEY UPDATE transcript=?, upload_date=NOW()", [$_SESSION['user_id'], json_encode($data), json_encode($data)]);
+            Database::insertQuery("UPDATE users SET macid=?, macpwd=? WHERE id=?", [$_POST['userid'], $_POST['pwd'], $_SESSION['user_id']]);
 
             // Redirect to newly populated dashboard
             redirect("/dashboard");

@@ -8,17 +8,7 @@
         <?= $cGPA ? "<object data='/imgs/down-arrow.svg' class='h-36 svg_obj a_bounce animate-bounce'><style>.svg_obj {pointer-events: none;}</style></object>" : null ?>
     </div>
     <div class="collapsible-body">
-        <p class="mb-0">Please fill our your MacID and Password to upload your transcript</p>
-        <em class="text-xl">NOTE: These credentials are not stored and are requried on every upload</em>
-        <form action="/inc/dashboard.php" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="form_title" value="upload_transcript">
-            <label for="userid">MacID</label>
-            <input type="text" id="userid" autocomplete="userid" name="userid" title="User ID">
-            <label for="userid">Password</label>
-            <input type="password" id="pwd" name="pwd" autocomplete="current-password">
-            <br>
-            <input type="submit" value="Upload Transcript">
-        </form>
+        <?= $transcript_form ?>
     </div>
 </div>
 
