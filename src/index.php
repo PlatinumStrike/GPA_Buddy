@@ -44,6 +44,11 @@
             include 'tpl/dashboard.tpl.php';
             break;
 
+        case '/timetable':
+            require 'inc/timetable.php';
+            include 'tpl/timetable.tpl.php';
+            break;
+
         case '/home':
         case '/':
             require 'inc/home.php';
