@@ -169,7 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
             $class_list .= "<div class='collapsible rounded-lg my-4 py-5 px-20'>" .
                 "<div class='collapsible-header'><h3>{$term[0]->Term}</h3>" .
                 "</div>" .
-                "<div class='collapsible-body grid gap-4 grid-cols-2 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4'>";
+                "<div class='collapsible-body grid gap-4 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4'>";
 
             foreach ($term as $class) {
                 // Calculate Class GPs and apply to term information
