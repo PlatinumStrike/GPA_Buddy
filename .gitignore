@@ -5,6 +5,9 @@ tailwindcss
 # Server configuration - platform dependent
 **.htaccess
 
+# Editor configuration
+.vscode
+
 # Composer Dependencies
 vendor
 composer.lock
