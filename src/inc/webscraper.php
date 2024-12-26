@@ -19,11 +19,11 @@ class Webscraper
         $this->client->request("GET", $url);
     }
 
-    function submitLoginForm($userid, $pwd, $targetUrl)
+    function submitLoginForm($userid, $pwd, $targetUrl, $button_name = 'Submit', $field_user = 'userid', $field_pwd = 'pwd')
     {
-        $this->client->submitForm('Submit', [
-            'userid' => $userid,
-            'pwd' => $pwd,
+        $this->client->submitForm($button_name, [
+            $field_user => $userid,
+            $field_pwd => $pwd,
         ]);
 
         return $this->client->getCrawler()->getUri() == $targetUrl;
@@ -79,6 +79,15 @@ class TableParser
             }
         }
         return $this->gradeTable;
+    }
+
+    function getTimetableData()
+    {
+        $x = new DOMXPath($this->dom);
+        $this->table = $x->query("//div[@id='welcomeTerms']");
+        foreach ($this->table->childNodes as $termNum => $term) {
+            echo $term;
+        }
     }
 }
 

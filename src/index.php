@@ -15,6 +15,8 @@
             echo "<script src='/js/collapsible.js' charset='utf-8'></script>";
             echo "<script src='/js/plotly-2.29.1.min.js' charset='utf-8'></script>";
             break;
+        case '/timetable':
+            
         default:
             break;
     }
