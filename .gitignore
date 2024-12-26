@@ -2,8 +2,12 @@
 tailwindcss.exe
 tailwindcss
 
+# Server configuration - platform dependent
+**.htaccess
+
 # Composer Dependencies
 vendor
+composer.lock
 
 # Ignore local Environment Files
 **.env
