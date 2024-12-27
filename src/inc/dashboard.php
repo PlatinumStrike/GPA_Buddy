@@ -74,7 +74,7 @@ function groupByTerm($transcript_data)
         $months = ["Winter" => 0.25, "Spring/Summer" => .5, "Fall" => 0.75];
         $aYear = intval(substr($a, 0, 4)) + $months[substr($a, 5, strlen($a) - 5)];
         $bYear = intval(substr($b, 0, 4)) + $months[substr($b, 5, strlen($b) - 5)];
-        return $aYear > $bYear;
+        return $aYear <=> $bYear;
     });
     return $grouped;
 }
@@ -109,23 +109,19 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 
     $macCreds = Database::selectQuery("SELECT macid, macpwd from users where id=?", [$_SESSION['user_id']]);
     ob_start();
-    include("./tpl/dashboard.credentials.tpl.php");
+    include("./tpl/forms/form.credentials.tpl.php");
     $mac_cred_form = ob_get_clean();
 
     if ($macCreds["macid"] == "") {
         $transcript_form = $mac_cred_form;
     } else {
         $webscraper = new Webscraper();
-        $webscraper->getRequest("https://csprd.mcmaster.ca/psc/prcsprd/EMPLOYEE/SA/c/SA_LEARNER_SERVICES.SSS_MY_CRSEHIST.GBL");
-        $login = $webscraper->submitLoginForm($macCreds["macid"], $macCreds["macpwd"], "https://csprd.mcmaster.ca/psc/prcsprd/EMPLOYEE/SA/c/SA_LEARNER_SERVICES.SSS_MY_CRSEHIST.GBL?");
-        if (!$login) {
-            redirect("/dashboard", ["MESSAGE" => "Credentials Incorrect"]);
+        $response = $webscraper->getTranscript($macCreds["macid"], $macCreds["macpwd"]);
+        if (!$response['STATUS']) {
+            redirect("/dashboard", ["MESSAGE" => $response['MESSAGE']]);
             exit();
         }
-
-        $tableParser = new TableParser($webscraper->getHTMLResponse());
-        $data = $tableParser->getTranscriptData();
-
+        $data = $response['CONTENT'];
         // Push information to database and overwrite if neccessary
         Database::insertQuery("INSERT INTO transcripts (id, transcript, upload_date) VALUES (?,?,NOW()) ON DUPLICATE KEY UPDATE transcript=?, upload_date=NOW()", [$_SESSION['user_id'], json_encode($data), json_encode($data)]);
 
