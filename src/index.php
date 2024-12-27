@@ -1,6 +1,6 @@
 <?php
 require 'config.php';
-switch (explode("?", $_SERVER['REQUEST_URI'])[0]) {
+switch ($_GET['path']) {
     case '/db':
         include './adminer/adminer.php';
         break;
@@ -10,7 +10,7 @@ switch (explode("?", $_SERVER['REQUEST_URI'])[0]) {
         break;
 
     default:
-        include 'inc/home.php';
+        session_start();
         include 'tpl/main.tpl.php';
         break;
 }

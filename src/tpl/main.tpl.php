@@ -2,17 +2,17 @@
 <html>
 
 <head>
+    <link rel="stylesheet" href="/css/tailwind.css" type="text/css">
+    <link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura.css" type="text/css">
+    <link rel="stylesheet" href="/css/main.css" type="text/css">
     <?php
-    switch (explode("?", $_SERVER['REQUEST_URI'])[0]) {
+    switch ($_GET['path']) {
         case '/dashboard':
             echo "<link rel='stylesheet' href='/css/collapsible.css' type='text/css'>";
             echo "<script src='/js/collapsible.js' charset='utf-8'></script>";
             echo "<script src='/js/plotly-2.29.1.min.js' charset='utf-8'></script>";
             break;
         default:
-            echo "<link rel='stylesheet' href='/css/tailwind.css' type='text/css'>";
-            echo "<link rel='stylesheet' href='https://unpkg.com/sakura.css/css/sakura.css' type='text/css'>";
-            echo "<link rel='stylesheet' href='/css/main.css' type='text/css'>";
             break;
     }
     ?>
@@ -28,7 +28,7 @@
         echo $_GET['MESSAGE'] . "<hr>";
     }
 
-    switch (explode("?", $_SERVER['REQUEST_URI'])[0]) {
+    switch ($_GET['path']) {
         case '/login':
             require 'inc/login.php';
             include 'tpl/login.tpl.php';

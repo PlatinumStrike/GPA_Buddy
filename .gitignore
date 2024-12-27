@@ -2,9 +2,6 @@
 tailwindcss.exe
 tailwindcss
 
-# Server configuration - platform dependent
-**.htaccess
-
 # Editor configuration
 .vscode
 

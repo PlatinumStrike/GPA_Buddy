@@ -5,6 +5,7 @@ $getStarted = "<div class='pb-8 pt-4 rounded-xl bg-gray-200'><h2 class='mt-2'>Ge
 
 if (isset($_POST['logout'])) {
     session_unset();
+    session_destroy();
 }
 
 $title_class = "";

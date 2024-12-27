@@ -1,0 +1,13 @@
+RewriteEngine on
+
+RewriteBase /src/
+Options -Indexes
+
+# Allow static files to be served directly
+RewriteRule ^src/(css|imgs|js)/(.*)$ /$1/$2  [END,L,QSA]
+
+# Allow include files to be served through 
+RewriteRule ^src/inc/(.*).php$ /inc/main.php?path=$1  [END,L,QSA]
+
+# Redirect all other requests to index.php
+RewriteRule ^src(.*)$ /index.php?path=$1 [END,NC,L,QSA]

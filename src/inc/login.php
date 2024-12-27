@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
     }
 
     // Check if user exists
-    $result = Database::selectQuery("SELECT * FROM users WHERE email=?", [$_POST['email']]);
+    $result = Database::selectQuery("SELECT id, email, password FROM users WHERE email=?", [$_POST['email']]);
     if (!$result) {
         // CASE: Email Incorrect
         redirect("/login", ["MESSAGE" => "Incorrect email or password, please try again."]);
