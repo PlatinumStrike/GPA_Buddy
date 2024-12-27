@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once("navigation.php");
 require_once("database.php");
 
@@ -10,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 
     // Check for valid emails
     if (empty(trim($_POST['email']))) {
-        redirect("/login", ["MESSAGE" =>  "Please provide an email"]);
+        redirect("/login", ["MESSAGE" => "Please provide an email"]);
         exit();
     } else if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
         redirect("/login", ["MESSAGE" => "Please provide a vaild email"]);
@@ -33,6 +32,9 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
         // Verify password matches saved hash
         if (password_verify($_POST['pwd'], $result['password'])) {
             // Sign in user and send to dashboard
+            if (!isset($_SESSION['user_id'])) {
+                session_start();
+            }
             $_SESSION['user_id'] = $result['id'];
             $_SESSION['user_email'] = $_POST['email'];
             redirect("/dashboard");

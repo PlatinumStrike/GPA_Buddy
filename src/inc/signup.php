@@ -1,5 +1,4 @@
 <?php
-session_start();
 // TODO: Add "Keep me signed in" feature
 
 require_once("navigation.php");
@@ -12,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 
     // Check for valid emails
     if (empty(trim($_POST['email']))) {
-        redirect("/signup", ["MESSAGE" =>  "Please provide an email"]);
+        redirect("/signup", ["MESSAGE" => "Please provide an email"]);
         exit();
     } else if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
         redirect("/signup", ["MESSAGE" => "Please provide a vaild email"]);
