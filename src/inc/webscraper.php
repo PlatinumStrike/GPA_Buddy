@@ -1,7 +1,6 @@
 <?php
 
 require_once(dirname(__DIR__, 1) . "/config.php");
-
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\HttpClient\HttpClient;
 
@@ -90,8 +89,15 @@ class Webscraper
         return $return;
     }
 
-    function getTimetable($userid, $pwd)
+    function getTimetable($userid, $pwd, $year = null, $semester = null)
     {
+        if (!isset($year)) {
+            $year = intval(date("Y"));
+        }
+        if (!isset($semester)) {
+            $semester = "Winter";
+        }
+
         $return = $this->login($userid, $pwd);
         if (!$return['STATUS'])
             return $return;
@@ -117,7 +123,7 @@ class Webscraper
         $rows = $xpath->query("tr[2]//tr[position() > 1]", $table);
 
         foreach ($rows as $rowIndex => $row) {
-            $classData = [];
+            $componentData = ["year" => $year, "semester" => $semester];
 
             // Columns in a typical timetable
             $columns = $xpath->query("td", $row);
@@ -128,30 +134,31 @@ class Webscraper
                     case 0: // Component Info
                         $cell = explode("\r", trim($cell->textContent));
 
-                        $classData['CODE'] = explode("-", $cell[0])[0];
-                        $classData['SECTION'] = explode("-", $cell[0])[1];
-                        $classData['TYPE'] = explode(" ", $cell[1])[0];
-                        $classData['NUMBER'] = intval(substr(explode(" ", $cell[1])[1], 1, -1));
+                        $componentData['course_code'] = explode("-", $cell[0])[0];
+                        $componentData['section'] = explode("-", $cell[0])[1];
+                        $componentData['type'] = explode(" ", $cell[1])[0];
+                        $componentData['component_number'] = intval(substr(explode(" ", $cell[1])[1], 1, -1));
                         break;
                     case 1: // Time Info
                         $cell = explode("\r", trim($cell->textContent));
-                        $classData['DAYS'] = explode(" ", $cell[0])[0];
+                        $componentData['days'] = explode(" ", $cell[0])[0];
                         $times = array_slice(explode(" ", $cell[0]), 1);
-                        $classData['TIME'] = ["START" => $times[0], "END" => $times[2]];
-                        $classData['LOCATION'] = ["BUILDING" => explode(" ", $cell[1])[0], "ROOM" => explode(" ", $cell[1])[1]];
+                        $componentData['start_time'] = $times[0];
+                        $componentData['end_time'] = $times[2];
+                        $componentData['location'] = $cell[1];
                         break;
                 }
             }
 
             // Add the class data to the timetable
-            if (!empty($classData)) {
-                $timetableData[] = $classData;
+            if (!empty($componentData)) {
+                $timetableData[] = $componentData;
             }
         }
 
         $return['STATUS'] = true;
         $return['MESSAGE'] = "Timetable retrieved successfully";
-        $return['CONTENT'] = $timetableData[0];
+        $return['CONTENT'] = $timetableData;
         return $return;
     }
 
