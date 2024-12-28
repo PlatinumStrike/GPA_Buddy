@@ -1,0 +1,32 @@
+<?php
+
+$ADDRESSES = [
+    "AMH" => ["Alumni Memorial Hall (University Club)", "Alumni Memorial Hall, 1280 Main St W, Hamilton, ON L8S 4K1, Canada"],
+    "ADL" => ["Applied Dynamics Laboratory", "Applied Dynamics Laboratory, Hamilton, ON L9H 6J4, Canada"],
+    "ABB" => ["Arthur N. Bourns Building", "A.N. Bourns Science Building, A.N Bourns Science Building, College Ct, Hamilton, ON L8S 4L8, Canada"],
+    "BSB" => ["Burke Science Building", "Burke Science Building, 1280 Main St W, Hamilton, ON L8S 4L8, Canada"],
+    "CSB" => ["Campus Services Building", "Campus Services Building, Campus Services Bldg, Hamilton, ON L9H 6J4, Canada"],
+    "CNH" => ["Chester New Hall", "Chester New Hall, McMaster University, 1280 Main St W, Hamilton, ON L8S 4L9, Canada"],
+    "CRL" => ["Communications Research Lab", "Communications Research Laboratory, Hamilton, ON L8S 4M1, Canada"],
+    "DSB" => ["DeGroote School of Business", "DeGroote School of Business, Michael G. DeGroote School of Business, 1280 Main St W, Hamilton, ON L8S 4E8, Canada"],
+    "ETB" => ["Engineering Technology Building", "Engineering Technology Building, Engineering Technology Bldg, Hamilton, ON L8S, Canada"],
+    "GSB" => ["General Science Building", "General Sciences Building, General Sciences Bldg, Hamilton, ON L8S 4L8, Canada"],
+    "GH" => ["Gilmour Hall", "Gilmour Hall, Room 108 1280 Main Street W McMaster University, Hamilton, ON L8S 4L8, Canada"],
+    "HH" => ["Hamilton Hall", "Hamilton Hall, Cootes Paradise A, Hamilton, ON L8S 4E4, Canada"],
+    "HSC" => ["Health Sciences Centre", "Hamilton Health Sciences, 1200 Main St W, Hamilton, ON L8N 3Z5, Canada"],
+    "ITB" => ["Information Technology Building", "Information Technology Building, 1280 Main St W, Hamilton, ON L8S 1C7, Canada"],
+    "IAHS" => ["Institute for Applied Health Sciences", "Institute for Applied Health Sciences at McMaster, 1400 Main St W, Hamilton, ON L8S 1C7, Canada"],
+    "IWC" => ["Ivor Wynne Centre", "Ivor Wynne Centre, 1280 Main St W, Hamilton, ON L8S 4L8, Canada"],
+    "JHE" => ["John Hodgins Engineering Building", "John Hodgins Engineering Building, 1280 Main St W, Hamilton, ON L8S 4L8, Canada"],
+    "KTH" => ["Kenneth Taylor Hall", "Kenneth Taylor Hall, Cootes Paradise A, Hamilton, ON L8S 4E4, Canada"],
+    "LSB" => ["Life Sciences Building", "Life Sciences Building, 1280 Main St W, Hamilton, ON L8S 4E4, Canada"],
+    "MDC" => ["McMaster Divinity College", "McMaster Divinity College, 1280 Main St W, Hamilton, ON L8S 4K1, Canada"],
+    "MUSC" => ["McMaster University Student Centre", "McMaster University Student Centre, 1280 Main St W, Hamilton, ON L8S 4S4, Canada"],
+    "MDCL" => ["Michael G. DeGroote Centre for Learning and Discovery", "Michael G. DeGroote Centre for Learning and Discovery, 1280 Main St W, Hamilton, ON L8S 4K1, Canada"],
+    "NRB" => ["Nuclear Research Building", "Nuclear Research Building, 1280 Main St W, Hamilton, ON L8S 4L8, Canada"],
+    "PC" => ["Psychology Building", "Psychology Building, McMaster University, King St W, Hamilton, ON L8S 4M1, Canada"],
+    "PGCLL" => ["Peter George Centre for Living and Learning", "Peter George Centre for Living and Learning, 1280 Main St W, Hamilton, ON L8S 4L8"],
+    "TSH" => ["Togo Salmon Hall", "Togo Salmon Hall, Cootes Paradise A, Hamilton, ON L8S 4E4, Canada"],
+    "UH" => ["University Hall", "University Hall, Cootes Paradise A, Hamilton, ON L8S 4E4, Canada"],
+    "DBAC" => ["David Braley Athletic Centre", "David Braley Athletic Centre, 1280 Main St W, Hamilton, ON L8S 4E4, Canada"]
+];
