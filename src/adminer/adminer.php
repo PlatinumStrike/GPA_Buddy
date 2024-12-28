@@ -16,7 +16,8 @@ function adminer_object()
         // specify enabled plugins here
         // new AdminerDumpXml(),
         new AdminerDatabaseHide(["information_schema", "mysql", "performance_schema"]),
-
+        new AdminerEnumOption(),
+        new AdminerEnumTypes()
     );
 
     /* It is possible to combine customization and plugins:
