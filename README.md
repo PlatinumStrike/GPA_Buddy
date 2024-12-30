@@ -2,6 +2,9 @@
 
 > Grade Point Averages Made Easy!
 
+> [!WARNING]  
+> This project will be replaced with a Next.JS/MongoDB implementation soon. I didn't love PHP all that much :(
+
 This project was constructed to help visualize your transcript history and give _you_ a better understanding of your grades.
 Be warned though, It also has a potency for creating **academic weapons**
 
